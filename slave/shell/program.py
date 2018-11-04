@@ -62,7 +62,7 @@ class Backdoor(object):
 
                 welcome = '\n'.join([
                     'Logged in into remote shell.',
-                    '\n',
+                    '',
                     'Remote login name: ' + remote_login,
                     'OS: ' + remote_os,
                     '\n',
