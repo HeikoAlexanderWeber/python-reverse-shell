@@ -8,14 +8,14 @@
             "name": "Python: Backdoor (internal)",
             "type": "python",
             "request": "launch",
-            "program": "./shell/program.py",
+            "program": "${workspaceRoot}/shell/program.py",
             "console": "integratedTerminal"
         },
         {
             "name": "Python: Backdoor (external)",
             "type": "python",
             "request": "launch",
-            "program": "./shell/program.py",
+            "program": "${workspaceRoot}/shell/program.py",
             "console": "externalTerminal"
         }
     ]
