@@ -26,7 +26,8 @@ while True:
         if data == ':kill':
             break
 
-        proc = subprocess.Popen(data,
+        proc = subprocess.Popen(
+            data,
             shell = True,
             stdin = subprocess.PIPE,
             stdout = subprocess.PIPE,
