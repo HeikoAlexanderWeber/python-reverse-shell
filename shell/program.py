@@ -1,5 +1,6 @@
 import socket
 import subprocess
+import os
 
 host = '127.0.0.1'
 port = 8080
@@ -13,7 +14,7 @@ while True:
     sock.send('Login: '.encode())
     passwd = sock.recv(1024).decode().strip()
     if passwd.strip() == ':kill':
-        break
+        os._exit(1)
     if password == passwd:
         break
 
