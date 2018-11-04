@@ -8,6 +8,3 @@ compile:
 	rm -rf ./build
 	pyinstaller ./shell/program.py --distpath ./build/bin --onefile
 	rm -rf ./build/program
-
-netcat:
-	nc -lvp 8080

