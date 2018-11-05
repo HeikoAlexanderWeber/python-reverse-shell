@@ -30,7 +30,11 @@ class Server(object):
             print('Got a connection from: ' + str(addr))
 
             while True:
-                cmd = input(self.__decode(conn.recv(1024)))
+                cmd = ''
+                received = self.__decode(conn.recv(1024))
+                while cmd == '':
+                    cmd = input(received)
+
                 if cmd == ':exit':
                     conn.send(self.__encode(':vanish'))
                     print(self.__decode(conn.recv(1024))+'\n')
