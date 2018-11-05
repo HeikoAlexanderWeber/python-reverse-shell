@@ -31,10 +31,17 @@ class Server(object):
 
             while True:
                 cmd = input(self.__decode(conn.recv(1024)))
-                conn.send(self.__encode(cmd))
-                if cmd == ':vanish':
+                if cmd == ':exit':
+                    conn.send(self.__encode(':vanish'))
+                    print(self.__decode(conn.recv(1024))+'\n')
+                    print('Shutting down server...')
+                    os._exit(0)
+                elif cmd == ':vanish':
+                    conn.send(self.__encode(':vanish'))
                     print(self.__decode(conn.recv(1024))+'\n')
                     break
+                else:
+                    conn.send(self.__encode(cmd))
 
 
 if __name__ == '__main__':
