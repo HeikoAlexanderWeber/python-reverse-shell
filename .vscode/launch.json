@@ -21,7 +21,7 @@
     ],
     "compounds": [
         {
-            "name": "Master & Slave",
+            "name": "Python: Master & Slave",
             "configurations": [
                 "Python: Master (integ.)",
                 "Python: Slave (integ.)"
