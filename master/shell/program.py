@@ -3,6 +3,15 @@ import subprocess
 import time
 import os
 import base64
+from comms import Comms
+
+class ServerNew(object):
+    def __init__(self, host, port):
+        self.__comms = Comms(host, port)
+
+    def listen(self):
+        self.__comms.listen()
+        self.__comms.send("Bananarama")
 
 class Server(object):
     def __init__(self, host, port):
@@ -49,4 +58,5 @@ class Server(object):
 
 
 if __name__ == '__main__':
-    Server('127.0.0.1', 8080).listen()
+    ServerNew('127.0.0.1', 8080).listen()
+    #Server('127.0.0.1', 8080).listen()

