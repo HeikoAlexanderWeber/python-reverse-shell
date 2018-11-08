@@ -26,7 +26,7 @@ class Server(object):
                 self.__comms.send(':exit')
                 print(self.__comms.recv().decode()+'\n')
                 print('Shutting down server...')
-                return
+                os._exit(0)
             elif cmd == ':vanish':
                 self.__comms.send(':vanish')
                 print(self.__comms.recv().decode()+'\n')
@@ -37,5 +37,6 @@ class Server(object):
 
 if __name__ == '__main__':
     s = Server('127.0.0.1', 8080)
-    s.accept()
-    s.execCmdLoop()
+    while True:
+        s.accept()
+        s.execCmdLoop()
