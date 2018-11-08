@@ -57,7 +57,7 @@ class Transmit(object):
         iterStr = str(iterations).encode()
         channel.send(iterStr)
         channel.recv(self.__BLOCK_SIZE)
-
+        
         # send chunks
         for it in range(0, iterations):
             # get offset in array
