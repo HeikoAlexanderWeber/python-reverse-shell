@@ -8,14 +8,14 @@
             "name": "Python: Master (integ.)",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/src/python/master/shell/program.py",
+            "program": "${workspaceFolder}/src/master/shell/program.py",
             "console": "externalTerminal"
         },
         {
             "name": "Python: Slave (integ.)",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/src/python/slave/shell/program.py",
+            "program": "${workspaceFolder}/src/slave/shell/program.py",
             "console": "none"
         }
     ],
