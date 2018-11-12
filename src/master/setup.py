@@ -10,7 +10,7 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='Simple Python Reverse Shell (Backdoor)',
+    name='Simple Python Reverse Shell (Server)',
     version='1.0.0',
     description='A Python reverse shell for executing remote code in target system.',
     long_description=readme,
