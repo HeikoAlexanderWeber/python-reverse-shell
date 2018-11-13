@@ -23,7 +23,7 @@ class Server(object):
                 cmd = input(received)
 
             if cmd == ':exit':
-                self.__comms.send(':exit')
+                self.__comms.send(':vanish')
                 print(self.__comms.recv().decode()+'\n')
                 print('Shutting down server...')
                 os._exit(0)
